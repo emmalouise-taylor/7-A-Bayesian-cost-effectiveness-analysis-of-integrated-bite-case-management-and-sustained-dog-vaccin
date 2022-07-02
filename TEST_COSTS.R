@@ -1,6 +1,4 @@
 
-#capital costs - incurred once at set up 
-#operational costs - ongoing costs incurred each year 
 
                         ############################################################
                                               ##DIAGNOSIS / year (USD)
@@ -18,52 +16,47 @@ nlaboratorytech <- 2
 psilaboratorytechsalary <- 1575 
 psidiagpersonel <- nlaboratorytech *psilaboratorytechsalary
 
-psitotaldiagnosisSetUp <- psidiagcapital + psidiagoperational + psidiagpersonel ##total cost of setting up diagnostics 
-psitotaldiagnosisOnGoing <- psidiagoperational + psidiagpersonel #total cost of maintaining diagnostics  
+psitotaldiagnosisSetUp <- psidiagcapital + psidiagoperational + psidiagpersonel 
+psitotaldiagnosisOnGoing <- psidiagoperational + psidiagpersonel 
 
                           ###########################################################
                                                       ##SURVEILLANCE/ Year
 #CAPITAL 
-psisurvcapital <- 1572 #includes animal capture equipment, comms material
+psisurvcapital <- 1572 
 
 #OPERATIONAL 
-nvehicle <- 2 #number of vehicles
-psivehiclegas <- 22 * nvehicle #cost of gas per vehicle 
-psivehiclecost <- 88 + psivehiclegas # overall unit value ($88/vehicle) + cost gas
-psitotalvehcilecost <- psivehiclecost * nvehicle #overall cost/vehicle * number of vehicles
+nvehicle <- 2 
+psivehiclegas <- 22 * nvehicle 
+psivehiclecost <- 88 + psivehiclegas 
+psitotalvehcilecost <- psivehiclecost * nvehicle 
 utilities <- 1000
-psiofficerental <- 4000 + utilities #rental of office space
+psiofficerental <- 4000 + utilities 
 
 #PERSONEL  
 nvettech <- 3
-techsalary <- 9000  # vet tech salary per month * nmonths
+techsalary <- 9000  
 psitotalvettechcost <- nvettech * techsalary
 
-ncoords <- 1 #number of project coordinators
-psiprojectcoordsalary <- (4080)  #Project Coord salary per year
+ncoords <- 1 
+psiprojectcoordsalary <- (4080)  
 psitotalprojcoorcost <-  ncoords * psiprojectcoordsalary
 
 psisurvpersonnel <-  psitotalvettechcost + psitotalprojcoorcost 
 psisurvoperational <- psitotalvehcilecost + psiofficerental   
 
-psitotalsurveilanceSetUp <- psisurvoperational + psisurvcapital + psisurvpersonnel #total cost of setting up surveillance  
-psitotalsurveilanceOnGoing <- psisurvoperational + psisurvpersonnel  #total cost of maintaining surveillance 
+psitotalsurveilanceSetUp <- psisurvoperational + psisurvcapital + psisurvpersonnel 
+psitotalsurveilanceOnGoing <- psisurvoperational + psisurvpersonnel  
 
                                       ###########################################################
                                                          ##TRAINING / year (USD)
-##TOTAL COSTS FOR TRAINING PERSONNEL AT START UP 
-#need to discount psipersonelduringprogramme for proportion of this 
+
 
 ##PERSONEL
-fullnumberofpersonel <- 15 #number of personel in a single brigade - SETTING UP
-reducednumberofpersonel <- 7 #number of personel in a single brigade - ONGOING - ASSUME LOSS OF HALF THE TEAM LEAVING 50% TO TRAIN
+fullnumberofpersonel <- 15
+reducednumberofpersonel <- 7 
 
-psipersonelduringprogramme <- 35 #The cost per day per participant is based on the salary/wage and fringe benefits of participants in the workshop. 
-
-#**assume that we retain a percentage of personelle each year therefore only need to retrain a proportion of original staff
-#therefore need settup to have 1 year of full cost of whole team then every year after to have reduced cost
-#whereas ongoing has reduced cotst only from year 1 becuase its already paid out its full team cost historiclly 
-psibrigadepersonelSUfull <- 2*(fullnumberofpersonel * psipersonelduringprogramme) #assumed two days of training
+psipersonelduringprogramme <- 35 
+psibrigadepersonelSUfull <- 2*(fullnumberofpersonel * psipersonelduringprogramme) 
 psibrigadepersonelSUreduced <- 2*(reducednumberofpersonel * psipersonelduringprogramme)  
 
 numberofteachers <- 1
@@ -75,11 +68,11 @@ psitotaltrainingpersonelOG <- psibrigadepersonelSUreduced + psiteacher
 
 ## **OPERATIONAL TRAINING OF PERSONNEL
 numberofclassdays <- 1
-psiclassroomdays <- 104 * numberofclassdays # cost per class room * number class rooms needed
-numberfielddays <- 1 # number of field days
-psifielddays <- 104 * numberfielddays #cost of field days
+psiclassroomdays <- 104 * numberofclassdays 
+numberfielddays <- 1
+psifielddays <- 104 * numberfielddays 
 
-psioperationaltraining <- psiclassroomdays + psifielddays # includes classroom and field days, training related transport, space rental
+psioperationaltraining <- psiclassroomdays + psifielddays 
 
 psitotaltrainingSetUp <- psioperationaltraining + psitotaltrainingpersonelSU
 psitotaltrainingOnGoing <- psioperationaltraining + psitotaltrainingpersonelOG 
