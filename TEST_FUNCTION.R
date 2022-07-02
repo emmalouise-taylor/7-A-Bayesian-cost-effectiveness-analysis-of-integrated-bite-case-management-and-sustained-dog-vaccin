@@ -1,20 +1,20 @@
 Epi <- function(RabiesPrev = 0.3,  biteRate = 0.013, 
                 InfvsNoInfBiteRatio = 1,
-                nDog = 800000, nsims = 100){ ##function which executes what is to be done 
+                nDog = 800000, nsims = 100){  
   
-  nBites <- rpois(nsims,nDog*biteRate) # number of bites
+  nBites <- rpois(nsims,nDog*biteRate) 
   
-  nInfBites <- rpois(nsims, nBites*RabiesPrev*InfvsNoInfBiteRatio)# rabiesPrev = prob biting dog being rabid
+  nInfBites <- rpois(nsims, nBites*RabiesPrev*InfvsNoInfBiteRatio)
   
-  probPEP <- rbeta(nsims,ParamsPEP$res1,ParamsPEP$res2) # proportion getting PEP
+  probPEP <- rbeta(nsims,ParamsPEP$res1,ParamsPEP$res2) 
   
   nExpHumansPEP <- rbinom(nsims,nInfBites,probPEP)
   nNonExpHumansPEP <- rbinom(nsims,(nBites-nInfBites),probPEP)
   nPEPTreatments <- nExpHumansPEP + nNonExpHumansPEP
   
-  nExpHumansNoPEP <- nInfBites - nExpHumansPEP # number not getting PEP
+  nExpHumansNoPEP <- nInfBites - nExpHumansPEP 
   
-  nExpHumansVac <- rbinom(nsims, nExpHumansNoPEP,probPEP) # number of exposed (no PEP) humans that are vacc
+  nExpHumansVac <- rbinom(nsims, nExpHumansNoPEP,probPEP) 
   
   nInfHumans <- rbinom(nsims, nExpHumansNoPEP-nExpHumansVac, probInfHum) +
     rbinom(nsims, nExpHumansVac, probInfHum*(1-HumanVaccineEfficacy))
@@ -23,38 +23,30 @@ Epi <- function(RabiesPrev = 0.3,  biteRate = 0.013,
   
 }
 
-Eff <- function(NDoses = 5, nInfHumans = 100, nPEPTreatments = 150, #5 days due to doses
-                nExpHumansNoPEP = 200, nBites = 400, nsims = 100){ ##assinged returned function to "fun2"
+Eff <- function(NDoses = 5, nInfHumans = 100, nPEPTreatments = 150, 
+                nExpHumansNoPEP = 200, nBites = 400, nsims = 100){ 
   
-  ## Bit for people that receive PEP  
-  ##Probability of experiencing other outcomes
-  # being off work
   prob.eta <- rbeta(nsims,ParamsProbOffWork$res1,ParamsProbOffWork$res2)
-  nOffWork <- rbinom(nsims,nPEPTreatments,prob.eta)*NDoses #number of ppl off work bc PEP
-  
-  # length of time absence from work
+  nOffWork <- rbinom(nsims,nPEPTreatments,prob.eta)*NDoses 
   lambda <- rlnorm(nsims,ParamsLengthOffWork$mulog,ParamsLengthOffWork$sigmalog)
   
-    
-  ## QALYs
-  QALYnoInf <- (nBites - nPEPTreatments - nExpHumansNoPEP)*omegaPEP #bites by non-rabid dog, so similar utility to treated individuals
-  QALYPEP <- nPEPTreatments*omegaPEP - (nOffWork*lambda)/365*omegaWork ## humans with PEP with off work discount
-  QALYExpNoPEPVac <- (nExpHumansNoPEP-nInfHumans)*omegaExpNoPEP ## humans not treated that dont develop rabies due to PrEP
-  QALYDeath <- nInfHumans*omegaDeath ## humans infect die
+  QALYnoInf <- (nBites - nPEPTreatments - nExpHumansNoPEP)*omegaPEP 
+  QALYPEP <- nPEPTreatments*omegaPEP - (nOffWork*lambda)/365*omegaWork 
+  QALYExpNoPEPVac <- (nExpHumansNoPEP-nInfHumans)*omegaExpNoPEP 
+  QALYDeath <- nInfHumans*omegaDeath 
   
-  e <- QALYnoInf + QALYPEP + QALYExpNoPEPVac + QALYDeath  ##total QALY)
+  e <- QALYnoInf + QALYPEP + QALYExpNoPEPVac + QALYDeath 
   
   return(cbind(e,nOffWork))
   #return(cbind(e))
 }
 
-## Costs
 Cost <- function(nOffWork = 5, psiDogvacc = 0.29, psivacc = 14.45, 
                  nDog = 800000, DogVacCov = .3, nsims = 100, isSetupYear = T){
   
   set.seed(1)
   CostDogVacc <- rpois(nsims,(nDog*DogVacCov)) * psiDogvacc 
-  CostPEP <-  psivacc * nOffWork #number of people off work * cost per dose * 5 doses
+  CostPEP <-  psivacc * nOffWork
   
   if (isSetupYear == T){
     c <- psitotalsurveilanceSetUp + psitotaldiagnosisSetUp + psitotaltrainingSetUp + CostDogVacc + CostPEP
@@ -83,9 +75,7 @@ fun4  <- function(DogVacCov = .3, RabiesPrev = 0.3,
   return (cbind(e[,1],c))
 }
 
-######################alternative#################
-
-## Compute the value of parameters (a,b) for a Beta distribution to have mean and sd (m,s)
+## Copyright Gianluca Baio 2012
 betaPar <- function(m,s){
   a <- m*( (m*(1-m)/s^2) -1 )
   b <- (1-m)*( (m*(1-m)/s^2) -1 )
